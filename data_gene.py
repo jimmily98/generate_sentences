@@ -38,11 +38,12 @@ model_dict = {
     8:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,2,3,4],
     }
 
-def generate_data(model_num, size = 2000, percent = 0.8):
+def generate_data(model_num, size = 2000, percent = 0.8, portion = 0.5):
     # generate training and testing data for the model
     # model_num: the number of the model
     # size: the number of sentences for each leaf node
     # percent: the percentage of training data
+    # portion: the portion of the first class (only for model 1 (a bi-partition model))
 
     coding_list = model_dict[model_num]
     class_num = max(coding_list) + 1
@@ -68,8 +69,15 @@ def generate_data(model_num, size = 2000, percent = 0.8):
     code_random_training_list = []
     sents_random_testing_list = []
     code_random_testing_list = []
+    original_size = size
     for i in range(class_num):
         # generate a random list of [0~size-1]
+        if(model_num == 1):
+            # proportion (only available for model 1)
+            if(i == 0):
+                size = math.ceil(2 * size * portion)
+            else:
+                size = math.floor(2 * size * (1-portion))
         random_list = list(range(size))
         random.shuffle(random_list)
         split_index = int(len(random_list) * 0.8)
@@ -91,10 +99,9 @@ def generate_data(model_num, size = 2000, percent = 0.8):
     data_testing = pd.DataFrame({'Sentences':sents_random_testing_list, 'Coding':code_random_testing_list})
 
     # save the data
-    training_path = 'training_model' + str(model_num) + '_size_' + str(size) + '.xlsx'
-    testing_path = 'testing_model' + str(model_num) + '_size_' + str(size) + '.xlsx'
+    training_path = 'training_model' + str(model_num) + '_size_' + str(original_size) + '_portion_'+str(portion)+'.xlsx'
+    testing_path = 'testing_model' + str(model_num) + '_size_' + str(original_size) + '_portion_'+str(portion)+ '.xlsx'
     dir_name = 'model_'+str(model_num)
-
     # Check if the directory already exists
     if (os.path.exists(dir_name) == False):
         # If the directory doesn't exists, then create it
@@ -112,15 +119,18 @@ def generate_data(model_num, size = 2000, percent = 0.8):
     data_testing.to_excel(testing_path, index = False)
 
     print("data generated for model " \
-          + str(model_num) + " with size: \n" + str(size) + "\n and percentage: \n" + str(percent)\
-            + "\n have been saved!\n")
+          + str(model_num) + " with size: " + str(original_size) + " ;and percentage: " + str(percent)\
+            + " ;and proportion: "+str(portion) + "have been saved!\n")
     # Change back to the parent directory
     os.chdir('..')
 
 
 size_list = [500,2500,5000,10000]
+portion_list = [0.6,0.7,0.8]
 for size in size_list:
     generate_data(1,size)
+for portion in portion_list:
+    generate_data(1,5000,0.8,portion)
 
 
 
