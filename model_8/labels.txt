@@ -1,0 +1,5 @@
+release time
+title
+genre
+artist
+lyrics
