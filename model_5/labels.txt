@@ -1,4 +1,2 @@
-volume up
-volume down
+volume
 mute
-unmute
