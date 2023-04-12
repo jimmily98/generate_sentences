@@ -1,4 +1,3 @@
-PyGithub
 requests
 pandas
 transformers
