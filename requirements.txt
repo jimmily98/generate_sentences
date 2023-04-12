@@ -1,0 +1,9 @@
+PyGithub
+requests
+pandas
+transformers
+torch
+numpy
+pathlib
+transformers
+huggingface_hub
