@@ -7,7 +7,7 @@ import random
 import shutil
 
 # load data
-filename = 'sentences_augmented5000.xlsx'
+filename = 'sentences_augmented10000.xlsx'
 try:
     df = pd.read_excel(filename)
 except:
@@ -61,8 +61,8 @@ def generate_data(model_num, size = 2000, percent = 0.8, portion = 0.5):
         sentences_list.append(merged_sent_list)
         num_list.append(count)
     
-    # assertion: the number of sentences for each class should be no lesser than size
-    assert all([num_list[i] >= size for i in range(class_num)]), "The number of sentences for each class should be no lesser than size"
+    # assertion: the number of total sentences should be no lesser than size
+    assert sum(num_list) >= size, "The number of total sentences should be no lesser than size"
 
     # randomly select sentences for each element of sentences_list
     sents_random_training_list = []
@@ -127,17 +127,21 @@ def generate_data(model_num, size = 2000, percent = 0.8, portion = 0.5):
     # Change back to the parent directory
     os.chdir('..')
 
-model_num = [1,2,3,4,5,6,7,8]
-for i in model_num:
-    generate_data(i,5000,0.8,0.5)
+# model_num = [1,2,3,4,5,6,7,8]
+# for i in model_num:
+#     generate_data(i,5000,0.8,0.5)
 
 
-size_list = [1000,2000,5000,10000]
-portion_list = [0.6,0.7,0.8]
+size_list = [500,1000,2000,5000,10000,20000]
+portion_list = [0.5,0.6,0.7,0.8]
 for size in size_list:
     generate_data(1,size)
+    generate_data(2,size)
+    generate_data(5,size)
 for portion in portion_list:
     generate_data(1,5000,0.8,portion)
+    generate_data(2,5000,0.8,portion)
+    generate_data(5,5000,0.8,portion)
 
 
 

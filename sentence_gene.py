@@ -78,7 +78,7 @@ print('end of sentence generation!')
 # data augmentation
 if(augment):
     # minimum number of sentences for each node
-    min_num = 5000
+    min_num = 10000
     # find number of sentences for each node
     num_list = []
     for i in range(node_num):
