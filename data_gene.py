@@ -7,7 +7,7 @@ import random
 import shutil
 
 # load data
-filename = 'sentences_augmented2000.xlsx'
+filename = 'sentences_augmented5000.xlsx'
 try:
     df = pd.read_excel(filename)
 except:
@@ -75,10 +75,13 @@ def generate_data(model_num, size = 2000, percent = 0.8, portion = 0.5):
         if(model_num == 1):
             # proportion (only available for model 1)
             if(i == 0):
-                size = math.ceil(2 * size * portion)
+                size = math.ceil(original_size * portion)
             else:
-                size = math.floor(2 * size * (1-portion))
-        random_list = list(range(size))
+                size = math.floor(original_size * (1-portion))
+            random_list = list(range(size))
+        else:
+            # For other models
+            random_list = list(range(size//class_num))
         random.shuffle(random_list)
         split_index = int(len(random_list) * 0.8)
 
@@ -124,8 +127,12 @@ def generate_data(model_num, size = 2000, percent = 0.8, portion = 0.5):
     # Change back to the parent directory
     os.chdir('..')
 
+model_num = [1,2,3,4,5,6,7,8]
+for i in model_num:
+    generate_data(i,5000,0.8,0.5)
 
-size_list = [500,2500,5000,10000]
+
+size_list = [1000,2000,5000,10000]
 portion_list = [0.6,0.7,0.8]
 for size in size_list:
     generate_data(1,size)
